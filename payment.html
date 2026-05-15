@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UPI Payment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family: Arial, sans-serif;
+    background:#f7f7f7;
+}
+
+.navbar{
+    background:black;
+    padding:12px;
+}
+.navbar img{
+    height:65px;
+}
+
+.container{
+    max-width:600px;
+    margin:40px auto;
+    padding:0 15px;
+}
+
+.card{
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+.card h2{
+    margin-bottom:10px;
+}
+
+.amount{
+    font-size:26px;
+    font-weight:bold;
+    margin:15px 0;
+}
+
+.qr{
+    background:#f5f5f5;
+    padding:20px;
+    border-radius:14px;
+    margin:20px 0;
+}
+.qr img{
+    width:220px;
+}
+
+.upi-box{
+    background:#f5f5f5;
+    padding:12px;
+    border-radius:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:10px;
+}
+.upi-box span{
+    font-weight:600;
+}
+.copy{
+    background:black;
+    color:white;
+    border:none;
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.info{
+    font-size:13px;
+    color:#555;
+    margin-top:15px;
+}
+
+.done{
+    margin-top:20px;
+    width:100%;
+    padding:14px;
+    background:black;
+    color:white;
+    border:none;
+    border-radius:12px;
+    font-size:15px;
+    cursor:pointer;
+}
+.done:hover{background:#222}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <a href="retrosneaks.html">
+        <img src="RetroSneaks.png" alt="RetroSneaks">
+    </a>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h2>Complete Your Payment</h2>
+        <p>Scan QR or use UPI ID</p>
+
+        <div class="amount">₹ <span id="amount">0</span></div>
+        <div class="info" id="orderInfo"></div>
+
+        <div class="qr">
+            <img src="upi-qr.png" alt="UPI QR Code">
+        </div>
+        <div class="upi-box">
+            <span id="upiId">9380418163@superyes</span>
+            <button class="copy" onclick="copyUPI()">Copy</button>
+        </div>
+        <p class="info">
+            After completing payment, please take a screenshot and
+            WhatsApp it to <strong>+91 9380418163 or +91 8217693877</strong> for order confirmation.
+        </p>
+        <a href="https://wa.me/919380418163" target="_blank">
+            <button class="done">Send Payment Screenshot on WhatsApp</button>
+        </a>
+    </div>
+</div>
+
+<script>
+document.getElementById("amount").innerText =
+    localStorage.getItem("payAmount") || 0;
+
+function copyUPI() {
+    const upi = document.getElementById("upiId").innerText;
+    navigator.clipboard.writeText(upi);
+    alert("UPI ID copied!");
+}
+
+function paymentDone() {
+    alert("Thanks! We’ll verify your payment and contact you shortly.");
+    window.location.href = "retrosneaks.html";
+}
+const order = JSON.parse(localStorage.getItem("order"));
+
+if (order) {
+    document.getElementById("amount").innerText = order.total;
+
+    document.getElementById("orderInfo").innerHTML = `
+        <strong>Customer:</strong> ${order.customer.name}<br>
+        <strong>Address:</strong> ${order.customer.address}<br><br>
+        <strong>Items:</strong><br>
+        ${order.items.map(i =>
+            `${i.name} (${i.size}) × ${i.qty}`
+        ).join("<br>")}
+    `;
+}
+
+</script>
+</body>
+</html>

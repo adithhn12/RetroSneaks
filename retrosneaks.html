@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RetroSneaks</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    .logo-img {
+    height: 90px;  
+    width: auto;
+}
+
+@media (max-width: 768px) {
+    .logo-img {
+        height: 65px;
+    }
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f7f7f7}
+
+.container{max-width:1200px;margin:auto;padding:0 15px}
+
+.navbar {
+    background: black;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.nav-icons svg {
+    width: 28px;    
+    height: 28px;
+    stroke: white;
+    fill: none;
+    stroke-width: 2;
+    transition: transform 0.2s ease, stroke 0.2s ease;
+}
+
+.nav-icons a:hover svg {
+    transform: scale(1.1);
+    stroke: #ddd;
+}
+
+.cart-icon {
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    padding: 3px 7px;
+    border-radius: 50%;
+}
+
+.menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+}
+
+@media (max-width: 768px) {
+    .menu-btn {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 72px;
+        right: 20px;
+        background: black;
+        flex-direction: column;
+        padding: 20px;
+        border-radius: 12px;
+        gap: 15px;
+    }
+
+    .nav-links.show {
+        display: flex;
+    }
+
+    .nav-icons {
+        margin-top: 10px;
+    }
+}
+
+.grid{display:grid;gap:20px}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.grid-5{grid-template-columns:repeat(5,1fr)}
+
+@media(max-width:992px){
+    .grid-4,.grid-5{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:576px){
+    .grid-4,.grid-5{grid-template-columns:1fr}
+    .menu-btn{display:block}
+    .nav-links{
+        display:none;
+        position:absolute;
+        background:black;
+        right:20px;
+        top:70px;
+        flex-direction:column;
+        padding:20px;
+    }
+    .nav-links.show{display:flex}
+}
+
+.category{text-align:center;cursor:pointer}
+.category img{
+    background:white;
+    padding:16px;
+    border-radius:16px;
+    width:100%;
+}
+.category h4{font-size:14px;margin-top:8px}
+.category.active h4{text-decoration:underline}
+
+.category {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.category img {
+    transition: transform 0.25s ease;
+}
+
+.category:hover {
+    transform: translateY(-6px);
+}
+
+.category:hover img {
+    transform: scale(1.08);
+}
+
+.category.active img {
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+
+.card{
+    background:white;
+    padding:14px;
+    border-radius:20px;
+    transition:.3s;
+}
+.card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 15px 30px rgba(0,0,0,.15)
+}
+.card img{
+    width:100%;
+    background:#f5f5f5;
+    padding:20px;
+    border-radius:16px;
+}
+.off{
+    position:absolute;
+    background:red;
+    color:white;
+    padding:4px 8px;
+    border-radius:6px;
+    font-size:12px;
+}
+.price{font-weight:700}
+.old{text-decoration:line-through;color:#888;font-size:13px}
+
+select,button{
+    width:100%;
+    padding:10px;
+    border-radius:12px;
+    margin-top:6px;
+}
+button{
+    background:black;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+button:hover{background:#222}
+
+.toast{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#111;
+    color:white;
+    padding:14px 18px;
+    border-radius:10px;
+    opacity:0;
+    transform:translateY(20px);
+    transition:.3s;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+
+.auth-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.auth-box {
+    background: white;
+    padding: 30px;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    animation: pop 0.25s ease;
+}
+
+@keyframes pop {
+    from { transform: scale(0.9); opacity: 0 }
+    to { transform: scale(1); opacity: 1 }
+}
+
+.auth-box h2 {
+    margin-bottom: 15px;
+}
+
+.auth-box input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.auth-box button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    background: black;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.auth-box button:hover {
+    background: #222;
+}
+
+.switch {
+    font-size: 13px;
+    margin-top: 12px;
+}
+
+.switch a {
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.close {
+    position: absolute;
+    right: 16px;
+    top: 12px;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.footer {
+    background: #0b0b0b;
+    color: white;
+    padding: 50px 0 20px;
+    margin-top: 60px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.footer h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.footer a {
+    display: block;
+    color: #bbb;
+    text-decoration: none;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.footer a:hover {
+    color: white;
+}
+
+.footer p {
+    font-size: 14px;
+    color: #bbb;
+    margin-bottom: 8px;
+}
+
+.payments {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.payments img {
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+    height: 45px;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 13px;
+    color: #777;
+    border-top: 1px solid #222;
+    padding-top: 15px;
+}
+
+@media (max-width: 768px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .payments {
+        justify-content: center;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="container nav-flex">
+        <a href="retrosneaks.html" class="logo">
+            <img src="RetroSneaks.png" class="logo-img" alt="RetroSneaks">
+        </a>
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+        <div class="nav-links" id="navMenu">
+            <a href="info.html#shipping">Shipping Policy</a>
+            <a href="info.html#payment">Payment Policy</a>
+            <a href="info.html#about">About Us</a>
+            <div class="nav-icons">
+                <a href="cart.html" class="cart-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6 6h15l-1.5 9h-12z"></path>
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="18" cy="21" r="1"></circle>
+                    </svg>
+                    <span id="cartCount" class="badge">0</span>
+                </a>
+                <a href="javascript:void(0)" class="user-icon" onclick="openAuth()">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="8" r="4"></circle>
+                        <path d="M4 20c0-4 4-6 8-6s8 2 8 6"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container" style="margin-top:40px">
+    <div class="grid grid-5">
+        <div class="category active" data-cat="travis">
+            <img src="img2.jpg" alt="Travis">
+            <h4>TRAVIS</h4>
+        </div>
+        <div class="category" data-cat="dunks">
+            <img src="img3.jpg" alt="Dunks">
+            <h4>DUNKS</h4>
+        </div>
+        <div class="category" data-cat="jordan">
+            <img src="img4.jpg" alt="Jordan">
+            <h4>JORDAN</h4>
+        </div>
+        <div class="category" data-cat="force">
+            <img src="img5.jpg" alt="Force">
+            <h4>FORCE</h4>
+        </div>
+        <div class="category" data-cat="addidas">
+            <img src="img6.jpg" alt="Adidas">
+            <h4>ADIDAS</h4>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="margin:40px auto">
+    <div id="productGrid" class="grid grid-4"></div>
+</div>
+
+<div id="toast" class="toast">Added to cart 🛒</div>
+
+<script>    
+
+function toggleMenu() {
+    document.getElementById("navMenu").classList.toggle("show");
+}
+
+const products = {
+    travis: [
+        { name: "Air Jordan 1 Retro Low OG SP 'Canary' x Travis Scott", img: "Travis Scott/Air Jordan 1 Retro Low OG SP 'Canary' x Travis Scott.webp", price: 3899, mrp: 5599 },
+        { name: "Nike Air Jordan 1 Low OG SP 'Black Phantom' x Travis Scott", img: "Travis Scott/Nike Air Jordan 1 Low OG SP 'Black Phantom' x Travis Scott.webp", price: 4499, mrp: 5999 },
+        { name: "Travis Scott x Air Force 1 'Utopia'", img: "Travis Scott/Travis Scott x Air Force 1 'Utopia'.webp", price: 2999, mrp: 4599 },
+        { name: "Travis Scott x Air Jordan 1 Low OG SP 'Medium Olive'", img: "Travis Scott/Travis Scott x Air Jordan 1 Low OG SP 'Medium Olive'.webp", price: 3299, mrp: 4999 },
+        { name: "Travis Scott x Air Jordan 1 Retro Low OG SP 'Velvet Brown'", img: "Travis Scott/Travis Scott x Air Jordan 1 Retro Low OG SP 'Velvet Brown'.webp", price: 3599, mrp: 5499 },
+        { name: "Travis Scott x Jordan Jumpman Jack TR 'Bright Cactus'", img: "Travis Scott/Travis Scott x Jordan Jumpman Jack TR 'Bright Cactus'.webp", price: 2799, mrp: 4299 }
+    ],
+
+    dunks: [
+        { name: "Nike DUNK LOW PARTICULAR ROSE", img: "Dunks/Nike DUNK LOW PARTICULAR ROSE.webp", price: 1299, mrp: 1899 },
+        { name: "Nike DUNK LOW RETRO CREAM", img: "Dunks/Nike DUNK LOW RETRO CREAM.webp", price: 1199, mrp: 1799 },
+        { name: "Nike DUNK LOW RETRO PREMIUM BLACK", img: "Dunks/Nike DUNK LOW RETRO PREMIUM BLACK.webp", price: 1499, mrp: 1999 },
+        { name: "Nike DUNK LOW RETRO PREMIUM", img: "Dunks/Nike DUNK LOW RETRO PREMIUM.webp", price: 1399, mrp: 1899 },
+        { name: "Nike DUNK LOW RETRO SE", img: "Dunks/Nike DUNK LOW RETRO SE.webp", price: 1099, mrp: 1699 },
+        { name: "Nike DUNK LOW", img: "Dunks/Nike DUNK LOW.webp", price: 999, mrp: 1599 }
+    ],
+
+    jordan: [
+        { name: "AIR JORDAN 1 LOW SE OIL GREY", img: "Jordans/AIR JORDAN 1 LOW SE OIL GREY.webp", price: 1599, mrp: 2499 },
+        { name: "AIR JORDAN 1 LOW SE", img: "Jordans/AIR JORDAN 1 LOW SE.webp", price: 1499, mrp: 2399 },
+        { name: "AIR JORDAN 1 MID", img: "Jordans/AIR JORDAN 1 MID.webp", price: 1799, mrp: 2699 },
+        { name: "FLIGHT COURT", img: "Jordans/FLIGHT COURT.webp", price: 1299, mrp: 1999 }
+    ],
+
+    force: [
+        { name: "Air Force 1 '07 COCONUT MILK BLACK", img: "Air Force/Air Force 1 '07 COCONUT MILK BLACK.webp", price: 1099, mrp: 1599 },
+        { name: "Air Force 1 '07 Triple Black", img: "Air Force/Air Force 1 '07 'Triple Black'.webp", price: 1199, mrp: 1699 },
+        { name: "Air Force 1 '07 White", img: "Air Force/Air Force 1 '07 'White'.webp", price: 999, mrp: 1499 },
+        { name: "AIR FORCE 1 MID OFF WHITE", img: "Air Force/AIR FORCE 1 MID OFF WHITE.webp", price: 1299, mrp: 1899 },
+        { name: "Air Force 1 '07 BURGUNDY", img: "Air Force/Air Force 1'07 BURGUNDY.webp", price: 1099, mrp: 1599 },
+        { name: "Air Force 1 '07 UNIVERSITY GOLD", img: "Air Force/Air Force 1'07 UNIVERSITY GOLD.webp", price: 1199, mrp: 1699 }
+    ],
+
+    addidas: [
+        { name: "HANDBALL SPEZIAL", img: "Adidas/HANDBALL SPEZIAL.webp", price: 1099, mrp: 1799 },
+        { name: "SAMBA OG CLOUD WHITE", img: "Adidas/SAMBA OG CLOUD WHITE.webp", price: 1299, mrp: 1999 },
+        { name: "SAMBA OG", img: "Adidas/SAMBA OG.webp", price: 1199, mrp: 1899 },
+        { name: "X CHAVARRIA FORUM 84", img: "Adidas/X CHAVARRIA FORUM 84.webp", price: 1399, mrp: 2199 },
+        { name: "X CHAVARRIA JABBAR LOW BLACK", img: "Adidas/X CHAVARRIA JABBAR LOW BLACK.webp", price: 1499, mrp: 2299 },
+        { name: "X CHAVARRIA JABBAR LOW", img: "Adidas/X CHAVARRIA JABBAR LOW.webp", price: 1399, mrp: 2199 }
+    ]
+};
+
+const grid = document.getElementById("productGrid");
+const cartCount = document.getElementById("cartCount");
+
+function render(category) {
+    grid.innerHTML = "";
+
+    products[category].forEach((p, i) => {
+        const discount = Math.round((1 - p.price / p.mrp) * 100);
+
+        grid.innerHTML += `
+        <div>
+            <div class="card">
+                <span class="off">${discount}% off</span>
+                <a href="products.html?c=${category}&i=${i}">
+                    <img src="${p.img}" alt="${p.name}">
+                </a>
+                <h3>${p.name}</h3>
+                <div class="price">₹${p.price} <span class="old">₹${p.mrp}</span></div>
+            </div>
+
+            <select>
+                <option>UK 6</option>
+                <option>UK 7</option>
+                <option>UK 8</option>
+                <option>UK 9</option>
+            </select>
+
+            <button onclick="addToCart('${category}', ${i}, this)">+ Add</button>
+        </div>`;
+    });
+}
+
+function addToCart(category, index, btn) {
+    const size = btn.previousElementSibling.value;
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    cart.push({
+        name: products[category][index].name,
+        img: products[category][index].img,
+        price: products[category][index].price,  
+        size,
+        qty: 1
+    });
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    showToast();
+}
+
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cartCount.innerText = cart.length;
+}
+
+function showToast() {
+    const toast = document.getElementById("toast");
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2000);
+}
+
+document.querySelectorAll(".category").forEach(cat => {
+    cat.addEventListener("click", () => {
+        document.querySelectorAll(".category").forEach(c => c.classList.remove("active"));
+        cat.classList.add("active");
+        render(cat.dataset.cat);
+    });
+});
+
+let isLogin = true;
+
+function openAuth() {
+    document.getElementById("authModal").style.display = "flex";
+}
+
+function closeAuth() {
+    document.getElementById("authModal").style.display = "none";
+}
+
+function toggleAuth() {
+    isLogin = !isLogin;
+
+    document.getElementById("authTitle").innerText = isLogin ? "Login" : "Register";
+    document.getElementById("switchText").innerText =
+        isLogin ? "Don’t have an account?" : "Already have an account?";
+    document.querySelector(".switch a").innerText = isLogin ? "Register" : "Login";
+    document.getElementById("authError").innerText = "";
+}
+
+function submitAuth() {
+    const email = authEmail.value.trim();
+    const password = authPassword.value.trim();
+    const errorBox = document.getElementById("authError");
+
+    if (!email || !password) {
+        errorBox.innerText = "Please fill all fields";
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    if (isLogin) {
+        const user = users.find(u => u.email === email && u.password === password);
+        if (!user) {
+            errorBox.innerText = "Invalid email or password";
+            return;
+        }
+
+        localStorage.setItem("currentUser", email);
+        closeAuth();
+    } else {
+        if (users.some(u => u.email === email)) {
+            errorBox.innerText = "Account already exists";
+            return;
+        }
+
+        users.push({ email, password });
+        localStorage.setItem("users", JSON.stringify(users));
+        toggleAuth();
+    }
+}
+
+render("travis");
+updateCartCount();
+
+</script>
+
+<script>
+let isLogin = true;
+
+function openAuth() {
+    document.getElementById("authModal").style.display = "flex";
+}
+
+function closeAuth() {
+    document.getElementById("authModal").style.display = "none";
+}
+
+function toggleAuth() {
+    isLogin = !isLogin;
+
+    document.getElementById("authTitle").innerText =
+        isLogin ? "Login" : "Register";
+
+    document.getElementById("switchText").innerText =
+        isLogin ? "Don’t have an account?" : "Already have an account?";
+
+    document.querySelector(".switch a").innerText =
+        isLogin ? "Register" : "Login";
+
+    document.getElementById("authName").style.display = isLogin ? "none" : "block";
+    document.getElementById("authAddress").style.display = isLogin ? "none" : "block";
+
+    document.getElementById("authError").innerText = "";
+}
+
+
+function submitAuth() {
+    const name = document.getElementById("authName").value.trim();
+    const email = authEmail.value.trim();
+    const address = document.getElementById("authAddress").value.trim();
+    const password = authPassword.value.trim();
+    const errorBox = document.getElementById("authError");
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    if (isLogin) {
+        const user = users.find(u => u.email === email && u.password === password);
+        if (!user) {
+            errorBox.innerText = "Invalid email or password";
+            return;
+        }
+
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        closeAuth();
+
+    } else {
+        if (!name || !email || !address || !password) {
+            errorBox.innerText = "Please fill all fields";
+            return;
+        }
+
+        if (users.some(u => u.email === email)) {
+            errorBox.innerText = "Account already exists";
+            return;
+        }
+
+        const newUser = { name, email, address, password };
+        users.push(newUser);
+
+        localStorage.setItem("users", JSON.stringify(users));
+        toggleAuth();
+    }
+}
+
+
+document.getElementById("authModal").addEventListener("click", e => {
+    if (e.target.id === "authModal") closeAuth();
+});
+</script>
+
+
+<div id="authModal" class="auth-overlay">
+    <div class="auth-box">
+        <span class="close" onclick="closeAuth()">×</span>
+
+        <h2 id="authTitle">Login</h2>
+
+        <input type="text" placeholder="Full Name" id="authName" style="display:none">
+        <input type="email" placeholder="Email" id="authEmail">
+        <input type="text" placeholder="Address" id="authAddress" style="display:none">
+        <input type="password" placeholder="Password" id="authPassword">
+
+<p id="authError" style="color:red;font-size:13px;margin-bottom:10px"></p>
+
+        <button onclick="submitAuth()">Continue</button>
+
+        <p class="switch">
+            <span id="switchText">Don’t have an account?</span>
+            <a onclick="toggleAuth()">Register</a>
+        </p>
+    </div>
+</div>
+<footer class="footer">
+    <div class="container footer-grid">
+
+        <div>
+            <h3>Quick Links</h3>
+            <a href="retrosneaks.html">Home</a>
+            <a href="info.html#shipping">Shipping Policy</a>
+            <a href="info.html#payment">Payment Policy</a>
+            <a href="info.html#about">About Us</a>
+        </div>
+
+        <div>
+            <h3>Get In Touch</h3>
+            <p>📞 9380418163</p>
+            <p>✉️ adithhn12@gmail.com</p>
+            <p>📞 8217693877</p>
+            <p>✉️ darshh@gmail.com</p>
+        </div>
+
+        <div>
+            <h3>We accept</h3>
+            <div class="payments">
+                <img src="payment-methods.jpg" alt="payment-methods">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 RetroSneaks. All rights reserved.
+    </div>
+</footer>
+</body>
+</html>

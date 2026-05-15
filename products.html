@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Product</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+<style>
+
+.logo-img {
+    height: 90px;   
+    width: auto;
+}
+
+@media (max-width: 768px) {
+    .logo-img {
+        height: 65px;
+    }
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f7f7f7}
+
+.navbar{background:black}
+.nav-flex{
+    max-width:1200px;
+    margin:auto;
+    padding:12px;
+    display:flex;
+    justify-content:space-between;
+}
+.nav-flex a{color:white;text-decoration:none}
+
+
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.nav-icons svg {
+    width: 28px;    
+    height: 28px;
+    stroke: white;
+    fill: none;
+    stroke-width: 2;
+    transition: transform 0.2s ease, stroke 0.2s ease;
+}
+
+.nav-icons a:hover svg {
+    transform: scale(1.1);
+    stroke: #ddd;
+}
+
+.cart-icon {
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    padding: 3px 7px;
+    border-radius: 50%;
+}
+
+.container{
+    max-width:1200px;
+    margin:40px auto;
+    padding:0 15px
+}
+.product{
+    background:white;
+    border-radius:20px;
+    padding:30px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+}
+.product img{
+    width:100%;
+    background:#f5f5f5;
+    padding:20px;
+    border-radius:16px;
+}
+@media(max-width:768px){
+.product{grid-template-columns:1fr}
+}
+
+button,select{
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    margin-top:10px;
+}
+button{
+    background:black;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+button:hover{background:#222}
+
+.toast{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#111;
+    color:white;
+    padding:14px 18px;
+    border-radius:10px;
+    opacity:0;
+    transform:translateY(20px);
+    transition:.3s;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+
+.meta {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+}
+
+.meta strong {
+    color: #000;
+}
+
+.badges {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.badge-box {
+    background: #f5f5f5;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.extra {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.extra h4 {
+    margin-bottom: 8px;
+}
+
+.extra ul {
+    padding-left: 18px;
+    font-size: 14px;
+    color: #444;
+}
+
+.trust {
+    background: #f7f7f7;
+    padding: 14px;
+    border-radius: 12px;
+    margin-top: 15px;
+    font-size: 13px;
+}
+
+.footer {
+    background: #0b0b0b;
+    color: white;
+    padding: 50px 0 20px;
+    margin-top: 60px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.footer h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.footer a {
+    display: block;
+    color: #bbb;
+    text-decoration: none;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.footer a:hover {
+    color: white;
+}
+
+.footer p {
+    font-size: 14px;
+    color: #bbb;
+    margin-bottom: 8px;
+}
+
+.payments {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.payments img {
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+    height: 45px;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 13px;
+    color: #777;
+    border-top: 1px solid #222;
+    padding-top: 15px;
+}
+
+@media (max-width: 768px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .payments {
+        justify-content: center;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="nav-flex">
+        <a href="retrosneaks.html">
+            <img src="RetroSneaks.png" class="logo-img" alt="RetroSneaks">
+        </a>
+        <div class="nav-icons">
+            <a href="cart.html" class="cart-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 6h15l-1.5 9h-12z"></path>
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="18" cy="21" r="1"></circle>
+                </svg>
+                <span id="cartCount" class="badge">0</span>
+            </a>
+            <a href="javascript:void(0)" class="user-icon" onclick="openAuth()">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="8" r="4"></circle>
+                    <path d="M4 20c0-4 4-6 8-6s8 2 8 6"></path>
+                </svg>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="product">
+        <img id="img">
+        <div>
+            <h2 id="name"></h2>
+            <p style="margin:15px 0">
+                <strong id="price" style="font-size:20px"></strong>
+                <del id="mrp" style="color:#888;margin-left:10px"></del>
+            </p>
+        <div id="desc" style="margin-top:10px;font-size:14px;color:#444"></div>
+        <div id="details" style="margin-top:12px;background:#f5f5f5;padding:12px;border-radius:10px;font-size:14px">
+        </div>
+        <div class="meta" id="desc"></div>
+            <div class="badges">
+            <div class="badge-box">✔ Premium First Copy</div>
+            <div class="badge-box">✔ Comfortable Daily Wear</div>
+            <div class="badge-box">✔ Streetwear Essential</div>
+        </div>
+
+    <select id="size">
+        <option>UK 6</option>
+        <option>UK 7</option>
+        <option>UK 8</option>
+        <option>UK 9</option>
+    </select>
+
+    <button onclick="add()">Add to Cart</button>
+
+    <div class="extra">
+        <h4>Product Details</h4>
+        <ul>
+            <li>High-quality synthetic upper</li>
+            <li>Durable rubber outsole</li>
+            <li>Soft cushioned insole for comfort</li>
+            <li>Designed for casual & street wear</li>
+        </ul>
+
+        <div class="trust">
+            🚚 Free Shipping across India <br>
+            🔍 Quality checked before dispatch <br>
+            📦 Secure packaging
+        </div>
+    </div>
+</div>
+
+
+<div id="toast" class="toast">Added to cart 🛒</div>
+</div>
+</div>  
+<script>
+const products = {
+    travis: [
+        { name: "Air Jordan 1 Retro Low OG SP 'Canary' x Travis Scott", img: "Travis Scott/Air Jordan 1 Retro Low OG SP 'Canary' x Travis Scott.webp", price: 3899, mrp: 5599 },
+        { name: "Nike Air Jordan 1 Low OG SP 'Black Phantom' x Travis Scott", img: "Travis Scott/Nike Air Jordan 1 Low OG SP 'Black Phantom' x Travis Scott.webp", price: 4499, mrp: 5999 },
+        { name: "Travis Scott x Air Force 1 'Utopia'", img: "Travis Scott/Travis Scott x Air Force 1 'Utopia'.webp", price: 2999, mrp: 4599 },
+        { name: "Travis Scott x Air Jordan 1 Low OG SP 'Medium Olive'", img: "Travis Scott/Travis Scott x Air Jordan 1 Low OG SP 'Medium Olive'.webp", price: 3299, mrp: 4999 },
+        { name: "Travis Scott x Air Jordan 1 Retro Low OG SP 'Velvet Brown'", img: "Travis Scott/Travis Scott x Air Jordan 1 Retro Low OG SP 'Velvet Brown'.webp", price: 3599, mrp: 5499 },
+        { name: "Travis Scott x Jordan Jumpman Jack TR 'Bright Cactus'", img: "Travis Scott/Travis Scott x Jordan Jumpman Jack TR 'Bright Cactus'.webp", price: 2799, mrp: 4299 }
+    ],
+
+    dunks: [
+        { name: "Nike DUNK LOW PARTICULAR ROSE", img: "Dunks/Nike DUNK LOW PARTICULAR ROSE.webp", price: 1299, mrp: 1899 },
+        { name: "Nike DUNK LOW RETRO CREAM", img: "Dunks/Nike DUNK LOW RETRO CREAM.webp", price: 1199, mrp: 1799 },
+        { name: "Nike DUNK LOW RETRO PREMIUM BLACK", img: "Dunks/Nike DUNK LOW RETRO PREMIUM BLACK.webp", price: 1499, mrp: 1999 },
+        { name: "Nike DUNK LOW RETRO PREMIUM", img: "Dunks/Nike DUNK LOW RETRO PREMIUM.webp", price: 1399, mrp: 1899 },
+        { name: "Nike DUNK LOW RETRO SE", img: "Dunks/Nike DUNK LOW RETRO SE.webp", price: 1099, mrp: 1699 },
+        { name: "Nike DUNK LOW", img: "Dunks/Nike DUNK LOW.webp", price: 999, mrp: 1599 }
+    ],
+
+    jordan: [
+        { name: "AIR JORDAN 1 LOW SE OIL GREY", img: "Jordans/AIR JORDAN 1 LOW SE OIL GREY.webp", price: 1599, mrp: 2499 },
+        { name: "AIR JORDAN 1 LOW SE", img: "Jordans/AIR JORDAN 1 LOW SE.webp", price: 1499, mrp: 2399 },
+        { name: "AIR JORDAN 1 MID", img: "Jordans/AIR JORDAN 1 MID.webp", price: 1799, mrp: 2699 },
+        { name: "FLIGHT COURT", img: "Jordans/FLIGHT COURT.webp", price: 1299, mrp: 1999 }
+    ],
+
+    force: [
+        { name: "Air Force 1 '07 COCONUT MILK BLACK", img: "Air Force/Air Force 1 '07 COCONUT MILK BLACK.webp", price: 1099, mrp: 1599 },
+        { name: "Air Force 1 '07 Triple Black", img: "Air Force/Air Force 1 '07 'Triple Black'.webp", price: 1199, mrp: 1699 },
+        { name: "Air Force 1 '07 White", img: "Air Force/Air Force 1 '07 'White'.webp", price: 999, mrp: 1499 },
+        { name: "AIR FORCE 1 MID OFF WHITE", img: "Air Force/AIR FORCE 1 MID OFF WHITE.webp", price: 1299, mrp: 1899 },
+        { name: "Air Force 1 '07 BURGUNDY", img: "Air Force/Air Force 1'07 BURGUNDY.webp", price: 1099, mrp: 1599 },
+        { name: "Air Force 1 '07 UNIVERSITY GOLD", img: "Air Force/Air Force 1'07 UNIVERSITY GOLD.webp", price: 1199, mrp: 1699 }
+    ],
+
+    addidas: [
+        { name: "HANDBALL SPEZIAL", img: "Adidas/HANDBALL SPEZIAL.webp", price: 1099, mrp: 1799 },
+        { name: "SAMBA OG CLOUD WHITE", img: "Adidas/SAMBA OG CLOUD WHITE.webp", price: 1299, mrp: 1999 },
+        { name: "SAMBA OG", img: "Adidas/SAMBA OG.webp", price: 1199, mrp: 1899 },
+        { name: "X CHAVARRIA FORUM 84", img: "Adidas/X CHAVARRIA FORUM 84.webp", price: 1399, mrp: 2199 },
+        { name: "X CHAVARRIA JABBAR LOW BLACK", img: "Adidas/X CHAVARRIA JABBAR LOW BLACK.webp", price: 1499, mrp: 2299 },
+        { name: "X CHAVARRIA JABBAR LOW", img: "Adidas/X CHAVARRIA JABBAR LOW.webp", price: 1399, mrp: 2199 }
+    ]
+};
+
+const url = new URLSearchParams(location.search);
+const cat = url.get("c");
+const i = url.get("i");
+
+const product = products[cat][i];
+img.src = product.img;
+name.innerText = product.name;
+price.innerText = "₹" + product.price;
+mrp.innerText = "₹" + product.mrp;
+
+const descriptions = {
+    travis: "Premium first-copy sneaker inspired by Travis Scott collaborations. Built for hype and street style.",
+    dunks: "Everyday low-top sneaker with clean design and comfortable fit.",
+    jordan: "Iconic Jordan-inspired style with a modern streetwear touch.",
+    force: "Timeless Air Force design built for durability and comfort.",
+    addidas: "Minimal retro-inspired sneaker for casual everyday wear."
+};
+
+const details = {
+    travis: [
+        "Premium first-copy quality",
+        "Hype streetwear design",
+        "True-to-size fit",
+        "Comfortable daily wear"
+    ],
+    dunks: [
+        "Lightweight everyday sneaker",
+        "Clean low-top silhouette",
+        "Easy outfit pairing",
+        "Long-wear comfort"
+    ],
+    jordan: [
+        "Classic Jordan styling",
+        "Padded ankle support",
+        "Durable sole",
+        "Street-ready look"
+    ],
+    force: [
+        "Timeless Air Force shape",
+        "Strong outsole grip",
+        "Daily wear comfort",
+        "Lifestyle-friendly"
+    ],
+    addidas: [
+        "Retro casual design",
+        "Lightweight build",
+        "Soft inner cushioning",
+        "Breathable comfort"
+    ]
+};
+
+document.getElementById("desc").innerHTML =
+    `<strong>About this shoe:</strong><br>${descriptions[cat]}`;
+
+document.getElementById("details").innerHTML =
+    details[cat].map(d => `• ${d}`).join("<br>");
+
+function add() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    cart.push({
+        name: product.name,
+        img: product.img,
+        price: Number(product.price),
+        size: size.value,
+        qty: 1
+    });
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    updateCart();d
+    toast();
+}
+
+const cartCount = document.getElementById("cartCount");
+
+function updateCart() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cartCount.innerText = cart.length;
+}
+
+function toast() {
+    const t = document.getElementById("toast");
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2000);
+}
+
+updateCart();
+</script>
+
+<footer class="footer">
+    <div class="container footer-grid">
+
+        <div>
+            <h3>Quick Links</h3>
+            <a href="retrosneaks.html">Home</a>
+            <a href="policies.html#shipping">Shipping Policy</a>
+            <a href="policies.html#payment">Payment Policy</a>
+            <a href="policies.html#about">About Us</a>
+        </div>
+
+        <div>
+            <h3>Get In Touch</h3>
+            <p>📞 9380418163</p>
+            <p>✉️ adithhn12@gmail.com</p>
+            <p>📞 8217693877</p>
+            <p>✉️ darshh@gmail.com</p>
+        </div>
+        <div>
+            <h3>We accept</h3>
+            <div class="payments">
+                <img src="payment-methods.jpg" alt="payment-methods">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 RetroSneaks. All rights reserved.
+    </div>
+</footer>
+</body>
+</html>

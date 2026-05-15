@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Cart</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+.logo-img {
+    height: 90px; 
+    width: auto;
+}
+
+@media (max-width: 768px) {
+    .logo-img {
+        height: 65px;
+    }
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f7f7f7}
+
+.navbar{background:black;position:sticky;top:0}
+.nav-flex{
+    max-width:1200px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px;
+}
+.nav-flex a{color:white;text-decoration:none}
+
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.nav-icons svg {
+    width: 28px;  
+    height: 28px;
+    stroke: white;
+    fill: none;
+    stroke-width: 2;
+    transition: transform 0.2s ease, stroke 0.2s ease;
+}
+
+.nav-icons a:hover svg {
+    transform: scale(1.1);
+    stroke: #ddd;
+}
+
+.cart-icon {
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    padding: 3px 7px;
+    border-radius: 50%;
+}
+
+.container{max-width:1200px;margin:40px auto;padding:0 15px}
+
+.grid{display:grid;gap:20px}
+.grid-2{grid-template-columns:2fr 1fr}
+@media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+
+.cart-card{
+    background:white;
+    padding:20px;
+    border-radius:14px;
+    display:grid;
+    grid-template-columns:120px 1fr 120px 80px 40px;
+    gap:15px;
+    align-items:center;
+}
+.cart-card img{
+    width:100%;
+    background:#f5f5f5;
+    padding:10px;
+    border-radius:12px;
+}
+
+.summary{
+    background:white;
+    padding:20px;
+    border-radius:14px;
+}
+.summary div{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+}
+.checkout{
+    width:100%;
+    padding:14px;
+    background:black;
+    color:white;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+}
+.checkout:hover{background:#222}
+
+select{padding:6px;border-radius:8px}
+.remove{color:red;cursor:pointer}
+
+.footer {
+    background: #0b0b0b;
+    color: white;
+    padding: 50px 0 20px;
+    margin-top: 60px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.footer h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.footer a {
+    display: block;
+    color: #bbb;
+    text-decoration: none;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.footer a:hover {
+    color: white;
+}
+
+.footer p {
+    font-size: 14px;
+    color: #bbb;
+    margin-bottom: 8px;
+}
+
+.payments {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.payments img {
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+    height: 45px;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 13px;
+    color: #777;
+    border-top: 1px solid #222;
+    padding-top: 15px;
+}
+
+@media (max-width: 768px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .payments {
+        justify-content: center;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="nav-flex">
+        <a href="retrosneaks.html">
+            <img src="RetroSneaks.png" class="logo-img" alt="RetroSneaks">
+        </a>
+        <div class="nav-icons">
+        <a href="cart.html" class="cart-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6h15l-1.5 9h-12z"></path>
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="18" cy="21" r="1"></circle>
+            </svg>
+            <span id="cartCount" class="badge">0</span>
+        </a>
+        <a href="#" class="user-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 20c0-4 4-6 8-6s8 2 8 6"></path>
+        </svg>
+        </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h2>My Cart (<span id="count">0</span>)</h2>
+
+    <div class="grid grid-2" style="margin-top:20px">
+        <div id="items"></div>
+
+        <div class="summary">
+            <div><span>Subtotal</span><strong>₹<span id="subtotal">0</span></strong></div>
+            <div><span>Shipping</span><strong style="color:green">FREE</strong></div>
+            <hr>
+            <div><strong>Total</strong><strong>₹<span id="total">0</span></strong></div>
+            <button class="checkout" onclick="goToPayment()">Checkout</button>
+
+        </div>
+    </div>
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+const items = document.getElementById("items");
+const cartCount = document.getElementById("cartCount");
+const subtotalEl = document.getElementById("subtotal");
+const totalEl = document.getElementById("total");
+const countEl = document.getElementById("count");
+
+function updateCartCount() {
+    cartCount.innerText = cart.length;
+    countEl.innerText = cart.length;
+}
+
+function render() {
+    items.innerHTML = "";
+    let total = 0;
+
+    updateCartCount();
+
+    if (cart.length === 0) {
+        items.innerHTML = "<p>Your cart is empty 🛒</p>";
+        subtotalEl.innerText = 0;
+        totalEl.innerText = 0;
+        return;
+    }
+
+    cart.forEach((p, i) => {
+        total += (Number(p.price) || 0) * (Number(p.qty) || 1);
+
+
+        items.innerHTML += `
+        <div class="cart-card">
+            <img src="${p.img}">
+            <div>
+                <h4>${p.name}</h4>
+                <p>Size: ${p.size}</p>
+            </div>
+
+            <select onchange="qty(${i}, this.value)">
+                ${[1,2,3,4,5].map(q =>
+                    `<option ${q == p.qty ? "selected" : ""}>${q}</option>`
+                ).join("")}
+            </select>
+
+            <strong>₹${p.price}</strong>
+            <span class="remove" onclick="del(${i})">✖</span>
+        </div>`;
+    });
+
+    subtotalEl.innerText = total;
+    totalEl.innerText = total;
+}
+
+function del(i) {
+    cart.splice(i, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    render();
+}
+
+function qty(i, q) {
+    cart[i].qty = parseInt(q);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    render();
+}
+
+function goToPayment() {
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (!user) {
+        alert("Please login before checkout");
+        return;
+    }
+
+    const order = {
+        customer: {
+            name: user.name,
+            email: user.email,
+            address: user.address
+        },
+        items: cart,
+        total: totalEl.innerText,
+        date: new Date().toLocaleString()
+    };
+
+    localStorage.setItem("order", JSON.stringify(order));
+    window.location.href = "payment.html";
+}
+
+
+render();
+</script>
+
+<footer class="footer">
+    <div class="container footer-grid">
+        <div>
+            <h3>Quick Links</h3>
+            <a href="retrosneaks.html">Home</a>
+            <a href="policies.html#shipping">Shipping Policy</a>
+            <a href="policies.html#payment">Payment Policy</a>
+            <a href="policies.html#about">About Us</a>
+        </div>
+        <div>
+            <h3>Get In Touch</h3>
+            <p>📞 9380418163</p>
+            <p>✉️ adithhn12@gmail.com</p>
+            <p>📞 8217693877</p>
+            <p>✉️ darshh@gmail.com</p>
+        </div>
+        <div>
+            <h3>We accept</h3>
+            <div class="payments">
+                <img src="payment-methods.jpg" alt="payment-methods">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 RetroSneaks. All rights reserved.
+    </div>
+</footer>
+</body>
+</html>
